@@ -1,0 +1,95 @@
+import java.util.*;
+import java.io.*;
+
+public class CleanerPositionsVTwo {
+        public static void main(String[] args) throws IOException {
+         String[] source = { "/home/pdb05/LuthfiAbdurrahim/2014-09",
+                 "/home/pdb05/LuthfiAbdurrahim/2014-10",
+                 "/home/pdb05/LuthfiAbdurrahim/2014-11",
+                 "/home/pdb05/LuthfiAbdurrahim/2014-12",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-01",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-02",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-03",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-04",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-05",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-06",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-07",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-08",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-09",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-10",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-11",
+                 "/home/pdb05/LuthfiAbdurrahim/2015-12",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-01",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-02",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-03",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-04",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-05",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-06",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-07",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-08",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-09",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-10",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-11",
+                 "/home/pdb05/LuthfiAbdurrahim/2016-12",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-01",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-02",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-03",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-04",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-05",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-06",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-07",
+                 "/home/pdb05/LuthfiAbdurrahim/2017-08" };
+
+                //String[] source = { "D:/education/PDB/coba" };
+                BufferedWriter out = new BufferedWriter(new FileWriter("/home/pdb05/output_positions_v2.csv"));
+
+                for (int j = 0; j < source.length; j++) {
+                        String target_dir = source[j];
+
+                        BufferedReader inputStream = null;
+                        File dir = new File(target_dir);
+                        File[] files = dir.listFiles();
+
+                        String currentLine;
+
+                        for (File f : files) {
+                                // This will skip the file if it is a directory
+                                System.out.println("baca file");
+                                if (!f.isFile())
+                                        continue;
+
+                                // System.out.println("File name in directory is: " + f);
+                                inputStream = new BufferedReader(new FileReader(f));
+                                int firstline = 0;
+                                int zonk = 0;
+                                boolean type1 = true; // longitude first
+                                while ((currentLine = inputStream.readLine()) != null) {
+
+                                        String[] abc = currentLine.split(",");
+                                        if (firstline == 0) {
+                                                firstline = 1;
+                                                if ( !abc[4].toLowerCase().equals("longitude")) {
+                                                        type1 = false;
+                                                }
+                                        } else {
+                                                if(abc.length > 5){
+                                                if (zonk == 1 || abc[4].equals("") || abc[5].equals("") || abc[4] == null
+                                                                || abc[5] == null) {
+                                                        zonk = 1;
+                                                } else {
+                                                        if (type1) {
+                                                                out.write(abc[4]+','+abc[5]);
+                                                                out.newLine();
+                                                        } else {
+                                                                out.write(abc[5]+','+abc[4]);
+                                                                out.newLine();
+                                                        }
+                                                }
+                                                }
+                                        }
+                                }
+                        }
+                }
+
+        }
+}

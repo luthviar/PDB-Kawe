@@ -1,0 +1,47 @@
+# Cleansing (2) : Validate Datatype Value
+setdata = spark.read.format('csv').option("header", "true")
+          .option("inferSchema","true").load('FileStore/tables/crime/')
+print("total baris sumber data: "+ str(setdata.count()))
+
+cleaningset = setdata.withColumn("Latitude", setdata["Latitude"]
+                                 .cast("double")).na.drop(subset=["Latitude"])
+
+cleaningset2a = cleaningset.withColumn("Longitude", cleaningset["Longitude"]
+                                       .cast("double")).na.drop(subset=["Longitude"])
+
+cleaningset2b = cleaningset2a.withColumn("Month", cleaningset2a["Month"]
+                                         .cast("integer")).na.drop(subset=["Month"])
+
+cleaningset2 = cleaningset2a.na.drop(subset=[' Crime ID','Month','Year', 
+                                             'Reported by', 'Falls within', 
+                                             'Longitude', 'Latitude', 
+                                             'Location', 'LSOA code', 
+                                             'LSOA name', 'Crime type',
+                                             'Last outcome category'])
+
+valid = setdata.where(setdata["Latitude"].cast("double").isNotNull())
+invalid = setdata.where(setdata["Latitude"].cast("double").isNull())
+
+print("total baris aftercleansing: "+ str(cleaningset2.count()))
+
+# melakukan cleansing, yaitu dengan pemilihan data yang memiliki value 
+# berdasarkan value crime type yang benar sesuai deskripsi pada data kepolisian UK
+cleaningset2 = cleaningset2.where(
+  (cleaningset2["Crime type"] == "Criminal damage and arson") |
+  (cleaningset2["Crime type"] == "Theft from the person") |
+  (cleaningset2["Crime type"] == "Public order") |
+  (cleaningset2["Crime type"] == "Vehicle crime") |
+  (cleaningset2["Crime type"] == "Violence and sexual offences") |
+  (cleaningset2["Crime type"] == "Shoplifting") |
+  (cleaningset2["Crime type"] == "Burglary") |
+  (cleaningset2["Crime type"] == "Other theft") |
+  (cleaningset2["Crime type"] == "Bicycle theft") |
+  (cleaningset2["Crime type"] == "Robbery") |
+  (cleaningset2["Crime type"] == "Other crime") |
+  (cleaningset2["Crime type"] == "Drugs") |
+  (cleaningset2["Crime type"] == "Possession of weapons") |
+  (cleaningset2["Crime type"] == "social behaviour")
+).drop()
+
+# Visualize hasil cleansing
+display(cleaningset2.orderBy("Crime type").groupBy("Crime type").count())
