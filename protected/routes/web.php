@@ -49,3 +49,6 @@ Route::get('/k_9/map_final', function () {
 Route::get('/k_20', function () {
     return view('k_20');
 });
+Route::get('/k_20/map_final', function () {
+    return view('map_final_20');
+});

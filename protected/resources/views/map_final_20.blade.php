@@ -20,9 +20,7 @@
 
   <body>
   
-  			<iframe src="https://www.google.com/maps/d/u/0/embed?mid=1t_M4IIsMAIMc9XWRYxn3XKfyxKpGO6I8" width="100%" height="100%"></iframe>
-
-  
+  			 <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1rYG6lYf7xLqOcPO2wV0MUWi_YTe-wMp4"  width="100%" height="100%"></iframe>
   
   </body>
 </html>
